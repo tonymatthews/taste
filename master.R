@@ -135,18 +135,5 @@ endtime-starttime
 
 
 
-## OLD SCRIPTS
-
-# IP Weights functions
-#source("scripts/func_ipweights.R")
-
-# Explore predicrtors of treatment
-#source("scripts/an_exp_predictors.R")
-
-#Kaplan Meier plots
-#source("scripts/an_kaplanmeier.R")
-
-#IPW Kaplan Meier plots
-#source("scripts/an_kaplanmeier_ipw.R")
 
 
