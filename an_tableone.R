@@ -141,7 +141,31 @@ median <- c("age",
 tableOne <- CreateTableOne(vars = vars, strata = c("exp"), includeNA = TRUE, data = dat) 
 tableOnePrint <- print(tableOne, nonnormal=median, contDigits = 1, test = FALSE, missing = TRUE, quote = FALSE, varLabel = TRUE, dropEqual = TRUE, noSpace = TRUE)
 write.table(tableOnePrint, file=paste("logfiles/table1_", period, ".txt", sep=""), sep="\t", quote = FALSE, row.names=TRUE, col.names=NA)
-        
-rm(dat, tableOnePrint, vars, tableOne, median, varsToFactor, varLabelList)
+
+#Create table one with SMDs
+tableOnePrint_smd <- print(tableOne, nonnormal=median, contDigits = 1, test = FALSE, quote = FALSE, varLabel = TRUE, dropEqual = TRUE, noSpace = TRUE, smd = TRUE)   
+
+# Create table one with SMDs when IP weighted
+func_ipweights(dat_covariates)
+dat <- dat %>% 
+          left_join(ipweights, by = "lopnr")
+dat_ipw <- svydesign(ids = ~1, data = dat, weights = ~sw)
+
+tableOne_ipw <- svyCreateTableOne(vars = vars, strata = c("exp"), includeNA = TRUE, data = dat_ipw)
+tableOne_ipwPrint_smd <- print(tableOne_ipw, nonnormal=median, contDigits = 1, test = FALSE, quote = FALSE, varLabel = TRUE, dropEqual = TRUE, noSpace = TRUE, smd = TRUE)
+
+# Make side by side unweighted and weighted table with SMDs
+combo <- cbind(print(tableOne, printToggle = FALSE),
+               print(tableOne_ipw, printToggle = FALSE))
+
+combo <- cbind(tableOnePrint_smd, tableOne_ipwPrint_smd)
+
+write.table(combo, file=paste("logfiles/table1_", period, "_smd.txt", sep=""), sep="\t", quote = FALSE, row.names=TRUE, col.names=NA)
+
+
+
+rm(dat, dat_ipw, tableOne, tableOne_ipw, 
+   tableOnePrint, tableOnePrint_smd, tableOne_ipwPrint_smd, 
+   vars, median, varsToFactor, varLabelList)
 
 

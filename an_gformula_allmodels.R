@@ -18,11 +18,7 @@ for(i in outcomes) {
     outcome_title <- "Myocardial infarction"
     dat_base <- dat_mi
   }
-  
-  if (i == "stentthromb") {
-    outcome_title <- "Stent thrombosis"
-    dat_base <- dat_stentthromb
-  }
+
   
   dat <- merge(dat_base, dat_covariates, by=c("lopnr", "interdat", "exp")) 
   

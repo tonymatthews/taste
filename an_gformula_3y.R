@@ -15,7 +15,7 @@ for(i in outcomes) {
   }
   
   if (i == "mi") {
-    outcome_title <- "Myocardial infarction"
+    outcome_title <- "Myocardial Infarction"
     dat_base <- dat_mi
   }
   
@@ -267,14 +267,14 @@ for(i in outcomes) {
   assign(paste0("plot_", i),  ggplot(gf_plot, aes(x=time, y=surv, group=factor(exp))) +
            geom_line(aes(linetype=factor(exp))) + 
            xlab("Weeks") +
-           ylab("Survival probability") +
+           ylab("Survival Probability") +
            scale_x_continuous(limits = c(0,156), breaks = seq(0,156,52)) +
            scale_y_continuous(limits = c(0.8,1), breaks = seq(0.8,1,0.05)) +
            theme_classic2() +
            theme(legend.position=c(0.4,0.2), 
                  legend.title = element_blank(),
                  text = element_text(size=16)) +
-           scale_linetype_discrete(labels=c("No thrombus aspiration", "Thrombus aspiration")) +
+           scale_linetype_discrete(labels=c("No Thrombus Aspiration", "Thrombus Aspiration")) +
            annotate("text", x=100, y=0.975, 
                     label=paste0("3-year survival difference: \n", 
                                  all_results_full[length(confounder_list), 5]),
@@ -290,10 +290,61 @@ for(i in outcomes) {
 write.table(results_3y, paste0("logfiles/an_gformula_", period, "_3y.txt"), sep="\t", quote=FALSE, row.names=FALSE)
 write.table(difference_results_3y, paste0("logfiles/an_gformula_rddiff_", period, "_3y.txt"), sep="\t", quote=FALSE, row.names=FALSE)
 
+# Figure 2 for AJE 
+mi_plot <- gf_plot
+plot_mi <- ggplot(mi_plot, aes(x=time, y=surv, group=factor(exp))) +
+         geom_line(aes(linetype=factor(exp))) + 
+         xlab("No. of Weeks") +
+         ylab("Survival Probability") +
+         scale_x_continuous(limits = c(0,156), breaks = seq(0,156,52)) +
+         scale_y_continuous(limits = c(0.8,1), breaks = seq(0.8,1,0.05)) +
+         theme_classic2() +
+         theme(legend.position=c(0.7,0.15), 
+               legend.background = element_blank(),
+               legend.box.background = element_rect(colour = "black"),
+               legend.title = element_text(size=24),
+               legend.title.align = 0.5,
+               legend.text = element_text(size=24),
+               text = element_text(size=24),
+               plot.title = element_text(size=24),
+               axis.title.x = element_text(colour = "black"),
+               axis.title.y = element_text(colour = "black"), 
+               axis.text.x = element_text(color = "black", size = 24), 
+               axis.text.y = element_text(color = "black", size = 24)) +
+         scale_linetype_discrete(name = "Treatment", labels=c("No thrombus aspiration", "Thrombus aspiration")) +
+         ggtitle("B)")
+
+ggsave(paste0("logfiles/AJE-01065-2021 Matthews Figure2B.pdf"), plot_mi, width = 8, height = 6)
+ggsave(paste0("logfiles/AJE-01065-2021 Matthews Figure2B.eps"), plot_mi, width = 8, height = 6)
+
+
+death_plot <- gf_plot
+plot_death <- ggplot(death_plot, aes(x=time, y=surv, group=factor(exp))) +
+  geom_line(aes(linetype=factor(exp))) + 
+  xlab("No. of Weeks") +
+  ylab("Survival Probability") +
+  scale_x_continuous(limits = c(0,156), breaks = seq(0,156,52)) +
+  scale_y_continuous(limits = c(0.8,1), breaks = seq(0.8,1,0.05)) +
+  theme_classic2() +
+  theme(legend.position="none",
+        text = element_text(size=24),
+        plot.title = element_text(size=24), 
+        axis.title.x = element_text(colour = "black"),
+        axis.title.y = element_text(colour = "black"), 
+        axis.text.x = element_text(color = "black", size = 24), 
+        axis.text.y = element_text(color = "black", size = 24)) +
+  ggtitle("A)")
+
+ggsave(paste0("logfiles/AJE-01065-2021 Matthews Figure2A.pdf"), plot_death, width = 8, height = 6)
+ggsave(paste0("logfiles/AJE-01065-2021 Matthews Figure2A.eps"), plot_death, width = 8, height = 6)
+
 # BRING TOGETHER PLOTS
   plot_3y <- ggarrange(plot_death, plot_mi,
                     ncol=2, nrow=1) 
+plot_3y
 
-ggsave(paste0("logfiles/standardizedplots_", period, "_3y.png"), plot_3y, width = 12)
+ggsave(paste0("logfiles/AJE-01065-2021 Matthews Figure2.pdf"), plot_3y, width = 16, height = 6)
+ggsave(paste0("logfiles/AJE-01065-2021 Matthews Figure2.eps"), plot_3y, width = 16, height = 6)
+
 
 

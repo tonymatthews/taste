@@ -1,5 +1,5 @@
 
-setwd("I:/EPI/Data/Anthony Matthews/taste/")
+setwd("W:/C6_Berglund/amatthews/taste-emulation/")
 
 # Packages
 library(tableone)
@@ -16,6 +16,7 @@ library(splitstackshape)
 library(boot)
 library(tidyr)
 library(stringr)
+library(survey)
 
 
 # Time code starts
@@ -49,7 +50,7 @@ x <- c("sep07tojan16",
 for (period in x) { 
 
 ######## IDENTIFY BASE DATA #######
-dat <- data.frame(read_dta(paste0("mydata/cr_finaldataset_", period, ".dta")))
+dat <- data.frame(read_dta(paste0("W:/C6_Berglund/data/procdata/taste-emulation/cr_finaldataset_", period, ".dta")))
 
 
 ###### CREATE DATA FRAMES FOR EACH OUTCOME ########
@@ -81,7 +82,7 @@ period <- "sep07tojan16"
 outcomes <- c("death", "mi")
 
 # Get data
-dat <- data.frame(read_dta(paste0("mydata/cr_finaldataset_", period, ".dta")))
+dat <- data.frame(read_dta(paste0("W:/C6_Berglund/data/procdata/taste-emulation/cr_finaldataset_", period, ".dta")))
 
 # Orgaise data
 source("scripts/cr_data.R")
@@ -114,6 +115,10 @@ source("scripts/an_gformula_period.R")
 ### Stratify by exposure and fit models in each arm
 source("scripts/an_gformula_expstrat.R")
 
+### IPW models
+source("scripts/func_ipweights.R")
+source("scripts/an_ipw.R")
+
 
 ### ADJUST FOR KILLIP CLASS AFTER TASTE (change period and rerun data first)
 period <- "mar13tojan16"
@@ -135,5 +140,18 @@ endtime-starttime
 
 
 
+## OLD SCRIPTS
+
+# IP Weights functions
+#source("scripts/func_ipweights.R")
+
+# Explore predicrtors of treatment
+#source("scripts/an_exp_predictors.R")
+
+#Kaplan Meier plots
+#source("scripts/an_kaplanmeier.R")
+
+#IPW Kaplan Meier plots
+#source("scripts/an_kaplanmeier_ipw.R")
 
 
